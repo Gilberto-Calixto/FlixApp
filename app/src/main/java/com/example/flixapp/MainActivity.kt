@@ -11,6 +11,7 @@ import com.example.flixapp.adapters.MovieAdapter
 import com.example.flixapp.databinding.ActivityMainBinding
 import com.example.flixapp.model.Category
 import com.example.flixapp.model.Movie
+import com.example.flixapp.util.CategoryTask
 
 class MainActivity : AppCompatActivity() {
 
@@ -31,19 +32,21 @@ class MainActivity : AppCompatActivity() {
 
         val listaFilmes = mutableListOf<Movie>()
         val listaCateria = mutableListOf<Category>()
-        for ( j in 0 .. 6) {
+        /*for ( j in 0 .. 6) {
             for (i in 0 until 15) {
                 val movie = Movie(R.drawable.placeholder)
                 listaFilmes.add(movie)
             }
             listaCateria.add(Category("Categoria ${j}", listaFilmes))
-        }
+        }*/
 
         val rcvCategory = binding.rcvCategories
         val adapter = CategoryAdapter( listaCateria)
         rcvCategory.layoutManager = LinearLayoutManager(this)
         rcvCategory.adapter = adapter
 
+
+        CategoryTask().executor("https://api.tiagoaguiar.co/netflixapp/home?apiKey=9186ca4b-8aa8-40f4-808d-df5cc9d7850d")
 
     }
 }

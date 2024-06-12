@@ -36,7 +36,7 @@ class CategoryAdapter(
 
             //texto categoria
             val categoria = binding.textCategoria
-            categoria.text = category.categoria
+            categoria.text = category.name
 
             //recyclerView
             val rcvFilmes = binding.rcvMovies

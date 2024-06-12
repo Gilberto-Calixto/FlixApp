@@ -19,6 +19,8 @@ class MainActivity : AppCompatActivity(), CategoryTask.Callback {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var progress: ProgressBar
+    private lateinit var adapter: CategoryAdapter
+    private val listaCateria = mutableListOf<Category>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,17 +37,10 @@ class MainActivity : AppCompatActivity(), CategoryTask.Callback {
         progress = binding.progrssBar
 
         val listaFilmes = mutableListOf<Movie>()
-        val listaCateria = mutableListOf<Category>()
-        /*for ( j in 0 .. 6) {
-            for (i in 0 until 15) {
-                val movie = Movie(R.drawable.placeholder)
-                listaFilmes.add(movie)
-            }
-            listaCateria.add(Category("Categoria ${j}", listaFilmes))
-        }*/
+
 
         val rcvCategory = binding.rcvCategories
-        val adapter = CategoryAdapter( listaCateria)
+        adapter = CategoryAdapter( listaCateria)
         rcvCategory.layoutManager = LinearLayoutManager(this)
         rcvCategory.adapter = adapter
 
@@ -59,6 +54,10 @@ class MainActivity : AppCompatActivity(), CategoryTask.Callback {
     }
 
     override fun onResult(categories: List<Category>) {
+        this.listaCateria.clear()
+        this.listaCateria.addAll(categories)
+        adapter.notifyDataSetChanged()
+
         progress.visibility = View.GONE
     }
 

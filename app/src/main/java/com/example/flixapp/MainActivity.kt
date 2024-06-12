@@ -1,6 +1,8 @@
 package com.example.flixapp
 
 import android.os.Bundle
+import android.view.View
+import android.widget.ProgressBar
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -13,9 +15,10 @@ import com.example.flixapp.model.Category
 import com.example.flixapp.model.Movie
 import com.example.flixapp.util.CategoryTask
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), CategoryTask.Callback {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var progress: ProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,6 +32,7 @@ class MainActivity : AppCompatActivity() {
         }
 
 
+        progress = binding.progrssBar
 
         val listaFilmes = mutableListOf<Movie>()
         val listaCateria = mutableListOf<Category>()
@@ -46,7 +50,19 @@ class MainActivity : AppCompatActivity() {
         rcvCategory.adapter = adapter
 
 
-        CategoryTask().executor("https://api.tiagoaguiar.co/netflixapp/home?apiKey=9186ca4b-8aa8-40f4-808d-df5cc9d7850d")
+        CategoryTask(this).executor("https://api.tiagoaguiar.co/netflixapp/home?apiKey=9186ca4b-8aa8-40f4-808d-df5cc9d7850d")
 
+    }
+
+    override fun onPreExecute() {
+        progress.visibility = View.VISIBLE
+    }
+
+    override fun onResult(categories: List<Category>) {
+        progress.visibility = View.GONE
+    }
+
+    override fun onFailure(message: String) {
+        progress.visibility = View.GONE
     }
 }

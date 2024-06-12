@@ -1,5 +1,7 @@
 package com.example.flixapp.util
 
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import com.example.flixapp.model.Category
 import com.example.flixapp.model.Movie
@@ -12,9 +14,20 @@ import java.net.URL
 import java.net.URLConnection
 import java.util.concurrent.Executors
 
-class CategoryTask {
+class CategoryTask (private val callback: Callback){
+
+    private val handler = Handler(Looper.getMainLooper())
+    interface Callback{
+        fun onPreExecute()
+        fun onResult(categories: List<Category>)
+        fun onFailure(message: String)
+    }
 
     fun executor (url: String) {
+
+        handler.post {
+            callback.onPreExecute()
+        }
 
         val executor = Executors.newSingleThreadExecutor()
 
@@ -39,12 +52,19 @@ class CategoryTask {
                 val jsonAsString = stream.bufferedReader().use { it.readText() } // bytes em String
                 //Log.e("Teste", jsonAsString)
                 //#Transformando em data class
-                toCategory(jsonAsString)
+                val categories = toCategory(jsonAsString)
+                handler.post {
+                    callback.onResult(categories)
+                }
 
 
 
             } catch (e: IOException) {
-                Log.e("Teste", e.message ?: "Erro desconhecido", e)
+                //Log.e("Teste", e.message ?: "Erro desconhecido", e)
+                val message = e.message ?: "Erro desconhecido"
+                handler.post {
+                    callback.onFailure(message)
+                }
             }
         }
     }
@@ -54,11 +74,11 @@ class CategoryTask {
         val listaCagory = mutableListOf<Category>()
 
         val jSonRoot = JSONObject(jsonAsString) //Raiz do json
-        val jsonCategory = jSonRoot.getJSONArray("categpry") // lista de coleção dos elementos
+        val jsonCategory = jSonRoot.getJSONArray("category") // lista de coleção dos elementos
         for (i in 0 until jsonCategory.length()) { // indo de 0 até o tamanho maximo da coleção
             val jsonCategories = jsonCategory.getJSONObject(i) //raiz dos objetos percorridos na coleção
             val title = jsonCategories.getString("title")
-            val jsonMovies = jsonCategories.getJSONArray("movies")
+            val jsonMovies = jsonCategories.getJSONArray("movie")
 
             val movies = mutableListOf<Movie>()
             for ( j in 0 until jsonMovies.length()) {

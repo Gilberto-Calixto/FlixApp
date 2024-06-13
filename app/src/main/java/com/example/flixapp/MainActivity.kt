@@ -14,6 +14,7 @@ import com.example.flixapp.databinding.ActivityMainBinding
 import com.example.flixapp.model.Category
 import com.example.flixapp.model.Movie
 import com.example.flixapp.util.CategoryTask
+import com.example.flixapp.util.DownloadImageTask
 
 class MainActivity : AppCompatActivity(), CategoryTask.Callback {
 

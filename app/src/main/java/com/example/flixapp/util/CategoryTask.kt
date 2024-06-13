@@ -13,6 +13,7 @@ import java.net.HttpURLConnection
 import java.net.URL
 import java.net.URLConnection
 import java.util.concurrent.Executors
+import javax.net.ssl.HttpsURLConnection
 
 class CategoryTask (private val callback: Callback){
 

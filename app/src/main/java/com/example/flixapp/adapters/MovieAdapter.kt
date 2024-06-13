@@ -1,13 +1,16 @@
 package com.example.flixapp.adapters
 
+import android.graphics.Bitmap
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.annotation.DrawableRes
 import androidx.recyclerview.widget.RecyclerView
 import com.example.flixapp.R
 import com.example.flixapp.databinding.ItemCelulaMovieBinding
 import com.example.flixapp.model.Movie
+import com.example.flixapp.util.DownloadImageTask
 
 class MovieAdapter(
     private val listaMovies: MutableList<Movie>
@@ -30,7 +33,13 @@ class MovieAdapter(
     inner class VH(itemView: View): RecyclerView.ViewHolder( itemView ){
 
         fun bind( item: Movie ){
-            /*val img = binding.imgCelula*/
+            
+            val img = itemView.findViewById<ImageView>(R.id.imgCelula)
+            DownloadImageTask( object : DownloadImageTask.Callback{
+                override fun onResult(bitmap: Bitmap) {
+                    img.setImageBitmap(bitmap)
+                }
+            }).execute(item.coverUrl)
 
         }
     }

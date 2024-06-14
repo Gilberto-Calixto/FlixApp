@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.annotation.DrawableRes
+import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView
 import com.example.flixapp.R
 import com.example.flixapp.databinding.ItemCelulaMovieBinding
@@ -13,10 +14,11 @@ import com.example.flixapp.model.Movie
 import com.example.flixapp.util.DownloadImageTask
 
 class MovieAdapter(
-    private val listaMovies: MutableList<Movie>
+    private val listaMovies: MutableList<Movie>,
+    @LayoutRes private val layoutId: Int
 ): RecyclerView.Adapter<MovieAdapter.VH>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieAdapter.VH {
-        val view = LayoutInflater.from(parent.context).inflate( R.layout.item_celula_movie, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate( layoutId, parent, false)
         return VH(view)
     }
 

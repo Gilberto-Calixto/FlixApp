@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.flixapp.R
 import com.example.flixapp.databinding.ItemCategoryBinding
 import com.example.flixapp.model.Category
 
@@ -43,7 +44,7 @@ class CategoryAdapter(
             rcvFilmes.layoutManager = LinearLayoutManager(
                 binding.root.context, LinearLayoutManager.HORIZONTAL, false
             )
-            val adapter = MovieAdapter(category.listagemMovies)
+            val adapter = MovieAdapter(category.listagemMovies, R.layout.item_celula_movie)
             rcvFilmes.adapter = adapter
 
 

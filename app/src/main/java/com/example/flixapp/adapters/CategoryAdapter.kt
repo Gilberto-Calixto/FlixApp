@@ -9,7 +9,8 @@ import com.example.flixapp.databinding.ItemCategoryBinding
 import com.example.flixapp.model.Category
 
 class CategoryAdapter(
-    private val listaCategory: MutableList<Category>
+    private val listaCategory: MutableList<Category>,
+    private val onItemClickListener: (Int) -> Unit
 ): RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>() {
 
     override fun onCreateViewHolder(
@@ -44,7 +45,7 @@ class CategoryAdapter(
             rcvFilmes.layoutManager = LinearLayoutManager(
                 binding.root.context, LinearLayoutManager.HORIZONTAL, false
             )
-            val adapter = MovieAdapter(category.listagemMovies, R.layout.item_celula_movie)
+            val adapter = MovieAdapter(category.listagemMovies, R.layout.item_celula_movie, onItemClickListener)
             rcvFilmes.adapter = adapter
 
 

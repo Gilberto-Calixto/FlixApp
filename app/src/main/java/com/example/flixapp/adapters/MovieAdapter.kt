@@ -15,7 +15,8 @@ import com.example.flixapp.util.DownloadImageTask
 
 class MovieAdapter(
     private val listaMovies: MutableList<Movie>,
-    @LayoutRes private val layoutId: Int
+    @LayoutRes private val layoutId: Int,
+    private val onItemClickListener: ( (Int) -> Unit )? = null
 ): RecyclerView.Adapter<MovieAdapter.VH>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieAdapter.VH {
         val view = LayoutInflater.from(parent.context).inflate( layoutId, parent, false)
@@ -28,18 +29,21 @@ class MovieAdapter(
         holder.bind(posicaoItem)
     }
 
-    override fun getItemCount(): Int {
-        return listaMovies.size
-    }
+    override fun getItemCount(): Int = listaMovies.size
 
     inner class VH(itemView: View): RecyclerView.ViewHolder( itemView ){
 
         fun bind( item: Movie ){
             
-            val img = itemView.findViewById<ImageView>(R.id.imgCelula)
+//            val img = itemView.findViewById<ImageView>(R.id.imgCelula)
+            val img: ImageView? = itemView.findViewById(R.id.imgCelula)
+            img?.setOnClickListener{
+                onItemClickListener?.invoke(item.id)
+            }
+
             DownloadImageTask( object : DownloadImageTask.Callback{
                 override fun onResult(bitmap: Bitmap) {
-                    img.setImageBitmap(bitmap)
+                    img?.setImageBitmap(bitmap)
                 }
             }).execute(item.coverUrl)
 

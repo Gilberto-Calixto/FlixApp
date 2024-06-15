@@ -1,5 +1,6 @@
 package com.example.flixapp
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.ProgressBar
@@ -37,11 +38,13 @@ class MainActivity : AppCompatActivity(), CategoryTask.Callback {
 
         progress = binding.progrssBar
 
-        val listaFilmes = mutableListOf<Movie>()
-
 
         val rcvCategory = binding.rcvCategories
-        adapter = CategoryAdapter( listaCateria)
+        adapter = CategoryAdapter( listaCateria) { id ->
+            val intent = Intent(this@MainActivity, MovieActivity::class.java)
+            intent.putExtra("id", id)
+            startActivity(intent)
+        }
         rcvCategory.layoutManager = LinearLayoutManager(this)
         rcvCategory.adapter = adapter
 

@@ -1,8 +1,11 @@
 package com.example.flixapp
 
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.ViewCompat
@@ -12,8 +15,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.flixapp.adapters.MovieAdapter
 import com.example.flixapp.databinding.ActivityMovieBinding
 import com.example.flixapp.model.Movie
+import com.example.flixapp.model.MovieDetails
+import com.example.flixapp.util.MovieTask
 
-class MovieActivity : AppCompatActivity() {
+class MovieActivity : AppCompatActivity(), MovieTask.Callback {
 
     private lateinit var toolbar: Toolbar
     private lateinit var binding: ActivityMovieBinding
@@ -40,6 +45,10 @@ class MovieActivity : AppCompatActivity() {
         val desc = binding.desc
         val sobre = binding.sobre
         rcvDetails = binding.rcvMoviesDetails
+
+        val id = intent?.getIntExtra("id", 0) ?: throw IllegalStateException("Id não encontrado")
+        val url = "https:/api.tiagoaguiar.co/netflixapp/movie/$id?apiKey=9186ca4b-8aa8-40f4-808d-df5cc9d7850d"
+        MovieTask(this).execute(url)
 
         title.text = "Batman"
         desc.text = "asdsds"
@@ -68,5 +77,17 @@ class MovieActivity : AppCompatActivity() {
         }
 
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onPreExecute() {
+
+    }
+
+    override fun onResult(movieDerails: MovieDetails) {
+        Log.i("Teste", movieDerails.toString())
+    }
+
+    override fun onFailure(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
     }
 }

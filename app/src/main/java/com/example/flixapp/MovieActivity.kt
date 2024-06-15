@@ -1,6 +1,7 @@
 package com.example.flixapp
 
 import android.os.Bundle
+import android.view.MenuItem
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -48,6 +49,10 @@ class MovieActivity : AppCompatActivity() {
 
         toolbar = binding.toolbar
         setSupportActionBar(toolbar)
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.baseline_arrow_back_24)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.title = null
+
 
 
         rcvDetails.layoutManager = GridLayoutManager(this, 3)
@@ -55,5 +60,13 @@ class MovieActivity : AppCompatActivity() {
         rcvDetails.adapter = adapter
 
 
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            finish()
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 }

@@ -75,7 +75,9 @@ class MovieTask(private val callback: Callback) {
                     callback.onFailure(message)
                 }
             }
+
             finally {
+
                 urlConnection.let { it?.disconnect() }
                 stream?.close()
             }
@@ -92,6 +94,7 @@ class MovieTask(private val callback: Callback) {
         val title: String = jsonRoot.getString("title")
         val desc = jsonRoot.getString("desc")
         val cast = jsonRoot.getString("cast")
+        val coverUrl = jsonRoot.getString("cover_url")
         val moviesJson = jsonRoot.getJSONArray("movie")
 
         val similars = mutableListOf<Movie>()
@@ -105,7 +108,7 @@ class MovieTask(private val callback: Callback) {
             similars.add(mv)
         }
 
-        val movie = Movie(id, title, desc, cast)
+        val movie = Movie(id, coverUrl, title, desc, cast)
 
         return MovieDetails(movie, similars)
     }

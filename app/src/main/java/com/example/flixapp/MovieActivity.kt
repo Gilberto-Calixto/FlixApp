@@ -1,8 +1,13 @@
 package com.example.flixapp
 
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
+import android.view.View
+import android.widget.ImageView
+import android.widget.ProgressBar
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
@@ -16,6 +21,7 @@ import com.example.flixapp.adapters.MovieAdapter
 import com.example.flixapp.databinding.ActivityMovieBinding
 import com.example.flixapp.model.Movie
 import com.example.flixapp.model.MovieDetails
+import com.example.flixapp.util.DownloadImageTask
 import com.example.flixapp.util.MovieTask
 
 class MovieActivity : AppCompatActivity(), MovieTask.Callback {
@@ -23,6 +29,14 @@ class MovieActivity : AppCompatActivity(), MovieTask.Callback {
     private lateinit var toolbar: Toolbar
     private lateinit var binding: ActivityMovieBinding
     private lateinit var rcvDetails: RecyclerView
+    private lateinit var progress: ProgressBar
+    private lateinit var adapter: MovieAdapter
+
+    private lateinit var title: TextView
+    private lateinit var desc: TextView
+    private lateinit var cast: TextView
+
+    val listaSemelhantes = mutableListOf<Movie>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,26 +49,22 @@ class MovieActivity : AppCompatActivity(), MovieTask.Callback {
             insets
         }
 
-        val listaSemelhantes = mutableListOf<Movie>()
-        for (i in 0 until 15) {
+
+        /*for (i in 0 until 15) {
             val movie = Movie(i, "Carr$i")
             listaSemelhantes.add(movie)
-        }
+        }*/
 
-        val title = binding.title
-        val desc = binding.desc
-        val sobre = binding.sobre
+        title = binding.title
+        desc = binding.desc
+        cast = binding.sobre
+
         rcvDetails = binding.rcvMoviesDetails
+        progress = binding.progressMD
 
         val id = intent?.getIntExtra("id", 0) ?: throw IllegalStateException("Id não encontrado")
         val url = "https:/api.tiagoaguiar.co/netflixapp/movie/$id?apiKey=9186ca4b-8aa8-40f4-808d-df5cc9d7850d"
         MovieTask(this).execute(url)
-
-        title.text = "Batman"
-        desc.text = "asdsds"
-        sobre.text = "Ano:"
-
-
 
         toolbar = binding.toolbar
         setSupportActionBar(toolbar)
@@ -65,7 +75,7 @@ class MovieActivity : AppCompatActivity(), MovieTask.Callback {
 
 
         rcvDetails.layoutManager = GridLayoutManager(this, 3)
-        val adapter = MovieAdapter( listaSemelhantes, R.layout.item_celula_movie_details)
+        adapter = MovieAdapter( listaSemelhantes, R.layout.item_celula_movie_details)
         rcvDetails.adapter = adapter
 
 
@@ -80,14 +90,32 @@ class MovieActivity : AppCompatActivity(), MovieTask.Callback {
     }
 
     override fun onPreExecute() {
-
+        progress.visibility = View.VISIBLE
     }
 
     override fun onResult(movieDerails: MovieDetails) {
-        Log.i("Teste", movieDerails.toString())
+        progress.visibility = View.GONE
+
+        title.text = movieDerails.movie.title
+        desc.text = movieDerails.movie.desc
+        cast.text = movieDerails.movie.cast
+
+        listaSemelhantes.clear()
+        listaSemelhantes.addAll(movieDerails.similars)
+        adapter.notifyDataSetChanged()
+
+        DownloadImageTask(object: DownloadImageTask.Callback{
+            override fun onResult(bitmap: Bitmap) {
+                val imgCover = binding.moviePlay
+                imgCover.setImageBitmap(bitmap)
+            }
+
+        })
+        //Log.i("Teste", movieDerails.toString())
     }
 
     override fun onFailure(message: String) {
+        progress.visibility = View.GONE
         Toast.makeText(this, message, Toast.LENGTH_LONG).show()
     }
 }

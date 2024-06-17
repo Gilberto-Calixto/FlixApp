@@ -1,6 +1,8 @@
 package com.example.flixapp
 
 import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
@@ -13,6 +15,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.GridLayoutManager
@@ -49,11 +52,6 @@ class MovieActivity : AppCompatActivity(), MovieTask.Callback {
             insets
         }
 
-
-        /*for (i in 0 until 15) {
-            val movie = Movie(i, "Carr$i")
-            listaSemelhantes.add(movie)
-        }*/
 
         title = binding.title
         desc = binding.desc
@@ -98,7 +96,7 @@ class MovieActivity : AppCompatActivity(), MovieTask.Callback {
 
         title.text = movieDerails.movie.title
         desc.text = movieDerails.movie.desc
-        cast.text = movieDerails.movie.cast
+        cast.text = getString(R.string.cast, movieDerails.movie.cast)
 
         listaSemelhantes.clear()
         listaSemelhantes.addAll(movieDerails.similars)
@@ -106,11 +104,16 @@ class MovieActivity : AppCompatActivity(), MovieTask.Callback {
 
         DownloadImageTask(object: DownloadImageTask.Callback{
             override fun onResult(bitmap: Bitmap) {
-                val imgCover = binding.moviePlay
-                imgCover.setImageBitmap(bitmap)
+
+                val layerDraw: LayerDrawable = ContextCompat.getDrawable(this@MovieActivity, R.drawable.shadows) as LayerDrawable
+                val imgCover = BitmapDrawable(resources, bitmap)
+                layerDraw.setDrawableByLayerId(R.id.cover_drawable, imgCover)
+                val coverImg = binding.moviePlay
+                coverImg.setImageDrawable(layerDraw)
+
             }
 
-        })
+        }).execute(movieDerails.movie.coverUrl)
         //Log.i("Teste", movieDerails.toString())
     }
 

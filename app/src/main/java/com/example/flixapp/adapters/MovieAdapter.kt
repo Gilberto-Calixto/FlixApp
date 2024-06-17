@@ -36,14 +36,16 @@ class MovieAdapter(
         fun bind( item: Movie ){
             
 //            val img = itemView.findViewById<ImageView>(R.id.imgCelula)
-            val img: ImageView? = itemView.findViewById(R.id.imgCelula)
-            img?.setOnClickListener{
+            val imgCover: ImageView = itemView.findViewById(R.id.imgCeluladet)
+            imgCover.setOnClickListener {
                 onItemClickListener?.invoke(item.id)
             }
 
+
+
             DownloadImageTask( object : DownloadImageTask.Callback{
                 override fun onResult(bitmap: Bitmap) {
-                    img?.setImageBitmap(bitmap)
+                    imgCover.setImageBitmap(bitmap)
                 }
             }).execute(item.coverUrl)
 

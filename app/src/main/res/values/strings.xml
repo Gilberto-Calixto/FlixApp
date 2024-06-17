@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">FlixApp</string>
+    <string name="cast">Elenco: %1$s</string>
 </resources>

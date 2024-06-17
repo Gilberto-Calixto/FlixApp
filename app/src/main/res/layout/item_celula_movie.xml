@@ -11,7 +11,7 @@
 
 
     <ImageView
-        android:id="@+id/imgCelula"
+        android:id="@+id/imgCeluladet"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
